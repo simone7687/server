@@ -88,6 +88,10 @@ abstract class ControllerInterface<T, ValueModel> {
     }
 
     getById(id: number): T {
+        if (isNaN(id)) {
+            throw new Error("Id is not a number")
+        }
+
         if (!this.db[id.toString()]) {
             throw new Error("Id not found")
         }
@@ -109,6 +113,9 @@ abstract class ControllerInterface<T, ValueModel> {
     }
 
     update(id: number, value: ValueModel): T {
+        if (isNaN(id)) {
+            throw new Error("Id is not a number")
+        }
         if (!this.db[id.toString()]) {
             throw new Error("Id not found")
         }
@@ -121,6 +128,9 @@ abstract class ControllerInterface<T, ValueModel> {
     }
 
     delete(id: number): boolean {
+        if (isNaN(id)) {
+            throw new Error("Id is not a number")
+        }
         if (!this.db[id.toString()]) {
             throw new Error("Id not found")
         }

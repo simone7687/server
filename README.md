@@ -1,1 +1,1 @@
-# server
+ts-node-esm .\src\app.ts
