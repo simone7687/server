@@ -1,5 +1,4 @@
 import { Express, Request } from 'express';
-import { BaseModel } from '../models/BaseModel';
 
 // * Si poteva rendere il db un parametro generico
 // * ed implementare i metodi CRUD in modo generico
@@ -16,8 +15,8 @@ class GenericResult<T> {
     message: string = ""
 }
 
-abstract class ControllerInterface<T extends BaseModel<InsertReq>, InsertReq> {
-    constructor(app: Express, route: string, db: T[]) {
+abstract class ControllerInterface<T, InsertReq> {
+    constructor(app: Express, route: string, db: { [id: string]: T }) {
         this.db = db
 
         // get by id
@@ -71,14 +70,16 @@ abstract class ControllerInterface<T extends BaseModel<InsertReq>, InsertReq> {
             }
         })
     }
+    persons = {};
 
-    db: T[]
+    db: { [id: string]: T }
     private lastUsedId: number = 0
 
     protected newId() {
         this.lastUsedId++
         return this.lastUsedId
     }
+    abstract newObject: (id: number, insertValue: InsertReq) => T
 
     validator(value: T) {
         return true
@@ -86,10 +87,15 @@ abstract class ControllerInterface<T extends BaseModel<InsertReq>, InsertReq> {
 
     abstract getById: (req: Request<any, GenericResult<T>, number>) => T
     abstract getList: (req: Request) => T[]
-    abstract insert<T extends BaseModel<InsertReq>, InsertReq>(req: Request<any, GenericResult<T>, InsertReq>): (req: Request<any, GenericResult<T>, InsertReq>) => T {
+
+    insert(req: Request<any, GenericResult<T>, InsertReq>): T {
         let body: InsertReq = req.body
-        let value: T = new (this.newId(), body)
+        let id = this.newId()
+        let value: T = this.newObject(id, body)
+        this.db[id.toString()] = value
+        return value
     }
+
     abstract update: (req: Request<any, GenericResult<T>, T>) => T
     abstract delete: (req: Request<any, GenericResult<boolean>, number>) => boolean
 }

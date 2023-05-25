@@ -1,5 +1,3 @@
-import { BaseModel } from "./BaseModel";
-
 export interface NewHouseRequest {
     name: string;
     city: string;
@@ -7,14 +5,15 @@ export interface NewHouseRequest {
     costructionDate: Date;
 }
 
-export class House extends BaseModel<NewHouseRequest> {
+export class House {
     constructor(id: number, value: NewHouseRequest) {
-        super(id, value)
+        this.id = id
         this.name = value.name ? value.name : ""
         this.city = value.city ? value.city : ""
         this.address = value.address ? value.address : ""
         this.costructionDate = value.costructionDate ? value.costructionDate : new Date()
     }
+    id: number
     name: string = ""
     city: string = ""
     address: string = ""

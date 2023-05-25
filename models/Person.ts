@@ -1,5 +1,3 @@
-import { BaseModel } from "./BaseModel";
-
 export interface NewPersonRequest {
     firstName: string
     surname: string
@@ -10,10 +8,9 @@ export interface NewPersonRequest {
     idHouse: number | undefined
 }
 
-
-export class Person extends BaseModel<NewPersonRequest> {
+export class Person {
     constructor(id: number, value: NewPersonRequest) {
-        super(id, value)
+        this.id = id
         this.firstName = value.firstName ? value.firstName : ""
         this.surname = value.surname ? value.surname : ""
         this.email = value.email ? value.email : ""
@@ -22,6 +19,7 @@ export class Person extends BaseModel<NewPersonRequest> {
         this.dateOfBirth = value.dateOfBirth ? value.dateOfBirth : new Date()
         this.idHouse = value.idHouse
     }
+    id: number
     firstName: string = ""
     surname: string = ""
     email: string = ""
