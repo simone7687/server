@@ -1,4 +1,4 @@
-export interface NewPersonRequest {
+export interface PersonRequest {
     firstName: string
     surname: string
     email: string
@@ -9,7 +9,7 @@ export interface NewPersonRequest {
 }
 
 export class Person {
-    constructor(id: number, value: NewPersonRequest) {
+    constructor(id: number, value: PersonRequest) {
         this.id = id
         this.firstName = value.firstName ? value.firstName : ""
         this.surname = value.surname ? value.surname : ""

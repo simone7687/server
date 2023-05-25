@@ -1,8 +1,4 @@
-import { Express, Request } from 'express';
-
-// * Si poteva rendere il db un parametro generico
-// * ed implementare i metodi CRUD in modo generico
-// * ma non l'ho fatto per facilitare la lettura del array durante il debug
+import { Express } from 'express';
 
 class GenericResult<T> {
     constructor(result: T | null, success: boolean = true, message: string = "") {
@@ -15,58 +11,55 @@ class GenericResult<T> {
     message: string = ""
 }
 
-abstract class ControllerInterface<T, InsertReq> {
+abstract class ControllerInterface<T, ValueModel> {
     constructor(app: Express, route: string, db: { [id: string]: T }) {
         this.db = db
 
         // get by id
-        app.get<string, any, GenericResult<T>, number>(route + "/:id", (req, res) => {
+        app.get<string, { id: number }, GenericResult<T>, number>(route + "/:id", (req, res) => {
             try {
-                let value = this.getById(req)
+                let value = this.getById(req.params.id)
                 res.send(new GenericResult<T>(value))
             } catch (e) {
-                let value = new GenericResult<T>(null, false, e?.toString())
-                res.status(500).send(value)
+                res.status(500).send(this.catch<T>(e))
             }
         })
         // get list
         app.get<string, any, GenericResult<T[]>>(route, (req, res) => {
             try {
-                let value = this.getList(req)
+                let value = this.getList()
                 res.send(new GenericResult<T[]>(value))
             } catch (e) {
-                let value = new GenericResult<T[]>([], false, e?.toString())
-                res.status(500).send(value)
+                res.status(500).send(this.catch<T[]>(e))
             }
         })
         // insert
-        app.post<string, any, GenericResult<T>, InsertReq>(route, (req, res) => {
+        app.post<string, any, GenericResult<T>, ValueModel>(route, (req, res) => {
             try {
-                let value = this.insert(req)
+                let body = req.body
+                let value = this.insert(body)
                 res.send(new GenericResult<T>(value))
             } catch (e) {
-                let value = new GenericResult<T>(null, false, e?.toString())
-                res.status(500).send(value)
+                res.status(500).send(this.catch<T>(e))
             }
         })
         // update
-        app.put<string, any, GenericResult<T>, T>(route, (req, res) => {
+        app.put<string, { id: number }, GenericResult<T>, ValueModel>(route + "/:id", (req, res) => {
             try {
-                let value = this.update(req)
+                let body = req.body
+                let value = this.update(req.params.id, body)
                 res.send(new GenericResult<T>(value))
             } catch (e) {
-                let value = new GenericResult<T>(null, false, e?.toString())
-                res.status(500).send(value)
+                res.status(500).send(this.catch<T>(e))
             }
         })
         // delete
-        app.delete<string, any, GenericResult<boolean>, number>(route + "/:id", (req, res) => {
+        app.delete<string, { id: number }, GenericResult<boolean>, number>(route + "/:id", (req, res) => {
             try {
-                let value = this.delete(req)
+                let value = this.delete(req.params.id)
                 res.send(new GenericResult<boolean>(value))
             } catch (e) {
-                let value = new GenericResult<boolean>(false, false, e?.toString())
-                res.status(500).send(value)
+                res.status(500).send(this.catch<boolean>(e))
             }
         })
     }
@@ -79,25 +72,61 @@ abstract class ControllerInterface<T, InsertReq> {
         this.lastUsedId++
         return this.lastUsedId
     }
-    abstract newObject: (id: number, insertValue: InsertReq) => T
+
+    protected catch<Tcatch>(e: any): GenericResult<Tcatch> {
+        let message = ""
+        if (e instanceof Error) {
+            message = e.message
+        }
+        return new GenericResult<Tcatch>(null, false, message)
+    }
+
+    abstract newObject: (id: number, insertValue: ValueModel) => T
 
     validator(value: T) {
         return true
     }
 
-    abstract getById: (req: Request<any, GenericResult<T>, number>) => T
-    abstract getList: (req: Request) => T[]
+    getById(id: number): T {
+        if (!this.db[id.toString()]) {
+            throw new Error("Id not found")
+        }
+        return this.db[id.toString()]
+    }
 
-    insert(req: Request<any, GenericResult<T>, InsertReq>): T {
-        let body: InsertReq = req.body
+    getList(): T[] {
+        return Object.values(this.db)
+    }
+
+    insert(regInsert: ValueModel): T {
         let id = this.newId()
-        let value: T = this.newObject(id, body)
+        let value: T = this.newObject(id, regInsert)
+        if (!this.validator(value)) {
+            throw new Error("Invalid object")
+        }
         this.db[id.toString()] = value
         return value
     }
 
-    abstract update: (req: Request<any, GenericResult<T>, T>) => T
-    abstract delete: (req: Request<any, GenericResult<boolean>, number>) => boolean
+    update(id: number, value: ValueModel): T {
+        if (!this.db[id.toString()]) {
+            throw new Error("Id not found")
+        }
+        let obj = this.newObject(id, value)
+        if (!this.validator(obj)) {
+            throw new Error("Invalid object")
+        }
+        this.db[id.toString()] = obj
+        return obj
+    }
+
+    delete(id: number): boolean {
+        if (!this.db[id.toString()]) {
+            throw new Error("Id not found")
+        }
+        delete this.db[id.toString()]
+        return true
+    }
 }
 
 export default ControllerInterface;

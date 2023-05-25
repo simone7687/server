@@ -1,4 +1,4 @@
-export interface NewHouseRequest {
+export interface HouseRequest {
     name: string;
     city: string;
     address: string;
@@ -6,7 +6,7 @@ export interface NewHouseRequest {
 }
 
 export class House {
-    constructor(id: number, value: NewHouseRequest) {
+    constructor(id: number, value: HouseRequest) {
         this.id = id
         this.name = value.name ? value.name : ""
         this.city = value.city ? value.city : ""
