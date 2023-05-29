@@ -8,7 +8,7 @@ git clone https://github.com/simone7687/itunes-test
 npm i
 ```
 
-## Avvio del apricazione 
+## Come avviare l'applicazione 
 ```shell
 ts-node-esm .\src\app.ts
 ```
