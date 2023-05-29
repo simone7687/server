@@ -1,6 +1,6 @@
 ## Download
 ```shell
-git clone https://github.com/simone7687/itunes-test
+git clone https://github.com/simone7687/server-c
 ```
 
 ## Installazione
