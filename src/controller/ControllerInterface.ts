@@ -63,7 +63,6 @@ abstract class ControllerInterface<T, ValueModel> {
             }
         })
     }
-    persons = {};
 
     db: { [id: string]: T }
     private lastUsedId: number = 0

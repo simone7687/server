@@ -22,6 +22,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // house
 new HouseController(app, "/api/house", houses)
 // person
-new PersonController(app, "/api/person", persons)
+new PersonController(app, "/api/person", persons, houses)
 
 app.listen(port, () => console.log(`⚡️[server]: Server is running on port ${port}!`));
