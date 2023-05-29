@@ -33,6 +33,15 @@ abstract class ControllerInterface<T, ValueModel> {
                 res.status(500).send(this.catch<T[]>(e))
             }
         })
+        // enumerator
+        app.get<string, any, GenericResult<number>>(route + "/enumerator", (req, res) => {
+            try {
+                let value = this.getList()
+                res.send(new GenericResult<number>(value.length))
+            } catch (e) {
+                res.status(500).send(this.catch<number>(e))
+            }
+        })
         // insert
         app.post<string, any, GenericResult<T>, ValueModel>(route, (req, res) => {
             try {
