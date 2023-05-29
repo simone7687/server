@@ -10,5 +10,6 @@ npm i
 
 ## Come avviare l'applicazione 
 ```shell
-ts-node-esm .\src\app.ts
+npm install -g ts-node
+ts-node-esm ./src/app.ts 
 ```
