@@ -53,9 +53,9 @@ GET  `{baseurl}`
 GET  `{baseurl}/enumerator`
 ### Aggiungere un elemento
 POST  `{baseurl}`       
-richiede un body con un elemento che si vuole inserire: [Modelli di esempio](Modelli-json)
+richiede un body con un elemento che si vuole inserire: [#Modelli-di-esempio](Modelli-json)
 ### Modificare un elemento
 PUT  `{baseurl}/:id`     
-richiede un body con un elemento che si vuole aggiornare: [Modelli di esempio](Modelli-json)
+richiede un body con un elemento che si vuole aggiornare: [#Modelli-di-esempio](Modelli-json)
 ### Eliminare un elemento
 DELETE  `{baseurl}/:id`
