@@ -6,11 +6,11 @@ git clone https://github.com/simone7687/server-c
 ## Installazione
 ```shell
 npm i
+npm install -g ts-node
 ```
 
 ## Come avviare l'applicazione 
 ```shell
-npm install -g ts-node
 ts-node-esm ./src/app.ts 
 ```
 
@@ -18,25 +18,25 @@ ts-node-esm ./src/app.ts
 House:
 ```json
 {
-    id: 0,
-    name: "",
-    city: "",
-    address: "",
-    costructionDate: null
+    "id": 0,
+    "name": "",
+    "city": "",
+    "address": "",
+    "costructionDate": null
 }
 ```
 
 Person:
 ```json
 {
-    id: 0,
-    firstName: "",
-    surname: "",
-    email: "",
-    phoneNumber: "",
-    cityOfBirthday: "",
-    dateOfBirth: null,
-    idHouse: null
+    "id": 0,
+    "firstName": "",
+    "surname": "",
+    "email": "",
+    "phoneNumber": "",
+    "cityOfBirthday": "",
+    "dateOfBirth": null,
+    "idHouse": null
 }
 ```
 
@@ -50,7 +50,7 @@ GET `{baseurl}/:id`
 ### Ottenere la lista completa
 GET  `{baseurl}`
 ### Numerare la lista corrente
-GET  `{baseurl}/enumerator`
+GET  `{baseurl}enumerator`
 ### Aggiungere un elemento
 POST  `{baseurl}`       
 richiede un body con un elemento che si vuole inserire: [Modelli di esempio](#modelli-json)

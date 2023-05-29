@@ -14,7 +14,8 @@ export class HouseController extends ControllerInterface<House, HouseRequest>{
         let city = value.city
         let address = value.address
         Object.values(this.db).forEach((house) => {
-            if (house.city == city && house.address == address) {
+            if (house.city && house.address && house.address.length > 0 && house.city.length > 0 &&
+                house.city == city && house.address == address) {
                 throw new Error("There can’t be 2 houses with the same City + Address")
             }
         })

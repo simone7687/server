@@ -17,16 +17,15 @@ export class PersonController extends ControllerInterface<Person, PersonRequest>
         // There can’t be 2 people with the same Email
         let email = value.email
         Object.values(this.db).forEach((person) => {
-            if (person.email == email) {
+            if (person.email && person.email.length > 0 && person.email == email) {
                 throw new Error("There can’t be 2 people with the same Email")
             }
         })
-        if (value.idHouse)
-        {
+        if (value.idHouse) {
             if (!this.dbHouse[value.idHouse.toString()]) {
                 throw new Error("House not found")
             }
-        } 
+        }
         return true
     }
 }
